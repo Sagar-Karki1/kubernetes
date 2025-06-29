@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: mysql-replicaset
+  namespace: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: <your-account-id>.dkr.ecr.us-east-1.amazonaws.com/your-mysql:latest
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "pw"
+        - name: MYSQL_DATABASE
+          value: "employees"
+EOF
+
+Web Application ReplicaSet:
+
+bashcat << EOF > replicasets/webapp-replicaset.yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: webapp-replicaset
+  namespace: webapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: employees
+  template:
+    metadata:
+      labels:
+        app: employees
+    spec:
+      containers:
+      - name: webapp
+        image: 463516543158.dkr.ecr.us-east-1.amazonaws.com/clo835-assignment-1-app:latest
+        ports:
+        - containerPort: 81
+        env:
+        - name: DBHOST
+          value: "mysql-service.database.svc.cluster.local"
+        - name: DBPORT
+          value: "3306"
+        - name: DBUSER
+          value: "root"
+        - name: DATABASE
+          value: "employees"
+        - name: DBPWD
+          value: "password"
