@@ -21,4 +21,4 @@ spec:
     - name: DATABASE
       value: "employees"
     - name: DBPWD
-      value: "pw"
+      value: "password"
