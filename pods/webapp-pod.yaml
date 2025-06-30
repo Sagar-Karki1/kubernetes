@@ -22,3 +22,5 @@ spec:
       value: "employees"
     - name: DBPWD
       value: "password"
+  imagePullSecrets:
+    - name: ecr-secret
